@@ -70,14 +70,7 @@ class Catalog():
     return filter( lambda e:name in e['Sachgruppen'], self.buecher ) 
     
   def get_autor( self, name ):
-    return filter( lambda e: self._is_author( name, e['authors']), self.buecher ) 
-    
-  def _is_author( self, name, author ):
-    print name, unicode(author)
-    if isinstance( author, list ):
-      return name in author
-    else:
-      return name==author
+    return filter( lambda e: name in e['authors'], self.buecher ) 
     
   def get_all( self ):
     return self.buecher
@@ -100,12 +93,10 @@ def format_author( author ):
   Erzeuge Reihenfolge Vorname Name
   '''
   pat = re.compile(r'(.*?),(.*?)(\(.*?\))?$')
-  def arrange( s ):
-    res = pat.match(s)
-    if res:
-      name, forename,role = res.groups()
-      return "%s %s %s" % (forename.strip(),name.strip(),role if role else '')  
-    else:
-      return s 
-  return arrange(author)
+  res = pat.match(author)
+  if res:
+    name, forename,role = res.groups()
+    return "%s %s %s" % (forename.strip(),name.strip(),role if role else '')  
+  else:
+    return author 
 

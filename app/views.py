@@ -11,7 +11,8 @@ from catalog import Catalog, paginate, format_author
 app.jinja_env.globals['format_size']=format_size
 app.jinja_env.globals['format_author']=format_author
 cat = Catalog()
-PER_PAGE = 12
+PER_PAGE    = 12
+TEXT_LIMIT  = 250
  
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
@@ -75,6 +76,10 @@ def download( filename ):
     fname = 'cover.jpg'
   path = p.join(filename,fname)
   return send_from_directory( app.config['BIBLIOTHEK'], path )
+  
+#TODO
+def make_ODPS_Fields():
+  pass
 
 def url_for_other_page(page):
   args = request.view_args.copy()
@@ -86,9 +91,13 @@ def is_list( author ):
   return isinstance( author, list )
 app.jinja_env.globals['is_list']=is_list
 
+def is_short( content ):
+  text = BS( content ).get_text()[:TEXT_LIMIT]
+  return len(text) < TEXT_LIMIT
+app.jinja_env.globals['is_short']=is_short
+
 def shorten( content ):
-  text = BS( content ).get_text()[:250]
+  text = BS( content ).get_text()[:TEXT_LIMIT]
   text, s, t = text.rpartition(' ')
   return text
 app.jinja_env.globals['shorten']=shorten
-

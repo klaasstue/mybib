@@ -27,7 +27,7 @@
                   color: blue">
         <a data-tooltip aria-haspopup="true" class="has-tip" 
                 title="Klicke für weitere Ausgaben!"data-toggle="offCanvasLeft">
-          <img src="{{ url_for('static',filename='Das_Erste_HD_Logo.svg') }}" 
+          <img src="{{ url_for('static',filename='my_library_logo.svgz') }}" 
                 style="width: 200px; 1height: auto !important;"/>
         </a>
       </div>
@@ -77,24 +77,30 @@
                       <h4>{{ entry['title'] }}</h4>
                       <b>{{ entry['summary'] }}</b>
                       <p style="color: grey;font-weight:bold"> 
-                        {% if is_list(entry['authors']) %}
-                          <a href="{{url_for('get_author', author=entry['authors'][0] )}}">
-                            {{ format_author(entry['authors'][0]) }}
+                        <a href="{{url_for('get_author', author=entry['authors'][0] )}}">
+                          {{ format_author(entry['authors'][0]) }}
+                        </a>
+                        {% for author in entry['authors'][1:] %}
+                          <a href="{{url_for('get_author', author=author )}}">
+                            , {{ format_author( author ) }}
                           </a>
-                          {% for author in entry['authors'][1:] %}
-                            <a href="{{url_for('get_author', author=author )}}">
-                              , {{ format_author( author ) }}
-                            </a>
-                          {% endfor %}
-                        {% else %}
-                          <a href="{{url_for('get_author', author=entry['authors'] )}}">
-                            {{ format_author( entry['authors'] ) }}
-                          </a>
-                        {% endif %}
+                        {% endfor %}
                       </p>
-                      <p id="short-{{entry['isbn']}}">{{ shorten( entry['content'] ) }}... <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')">mehr</a> </p>
-                      <div id="long-{{entry['isbn']}}" style="display: none">{{ entry['content'] }}  <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')"> <img src="{{ url_for('static', filename='drop-up-arrow.svg') }}" width="12px"></a></div>
-                     </div>
+                      {% if is_short( entry['content']) %}
+                        {{ entry['content'] }}
+                      {% else %}
+                        <p id="short-{{entry['isbn']}}">
+                          {{ shorten( entry['content'] ) }}... 
+                          <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')">mehr</a> 
+                        </p>
+                        <div id="long-{{entry['isbn']}}" style="display: none">
+                          {{ entry['content'] }}
+                          <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')"> 
+                            <img src="{{ url_for('static', filename='drop-up-arrow.svg') }}" width="12px">
+                          </a>
+                        </div>
+                      {% endif %}
+                    </div>
                   </div>
                 </div>
               </div>
