@@ -7,6 +7,13 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/foundation.css') }}">
     <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/app.css') }}">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      function toggle_content( cid ){
+        $( "#short-"+cid ).toggle();
+        $( "#long-"+cid ).toggle();
+      }
+    </script>
   </head>
   <body>
   <div class="row" style="max-width:100%">
@@ -17,7 +24,7 @@
                   overflow: hidden;
                   vertical-align: middle;
                   margin-right: 3em;
-                  color=blue">
+                  color: blue">
         <a data-tooltip aria-haspopup="true" class="has-tip" 
                 title="Klicke für weitere Ausgaben!"data-toggle="offCanvasLeft">
           <img src="{{ url_for('static',filename='Das_Erste_HD_Logo.svg') }}" 
@@ -58,7 +65,7 @@
                 <div class="callout">
                   <div class="media-object" style="padding: 20px 20px 20px 20px; 
                               box-shadow:0 10px 20px rgba(0,0,0,0.3)"> 
-                    <div class="media-object-section" style="width:40%">
+                    <div class="media-object-section" style="height:17em;width: 30%">
                       <img src="{{ url_for('download', filename=entry['path']) }}" style="width: 100%;box-shadow:0 10px 20px rgba(0,0,0,0.3)">
                       <p><a href="{{url_for( 'download', filename=entry['path'], bookId=entry['file'])}}">
                         <img src="{{ url_for('static', filename='download.png') }}"
@@ -85,8 +92,9 @@
                           </a>
                         {% endif %}
                       </p>
-                      <p>{{ entry['content'] }}</p>
-                    </div>
+                      <p id="short-{{entry['isbn']}}">{{ shorten( entry['content'] ) }}... <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')">mehr</a> </p>
+                      <div id="long-{{entry['isbn']}}" style="display: none">{{ entry['content'] }}  <a id="{{entry['isbn']}}" onclick="toggle_content('{{entry['isbn']}}')"> <img src="{{ url_for('static', filename='drop-up-arrow.svg') }}" width="12px"></a></div>
+                     </div>
                   </div>
                 </div>
               </div>

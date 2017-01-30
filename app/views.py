@@ -4,13 +4,14 @@
 import os.path as p
 from flask import url_for, send_from_directory, render_template, request, redirect
 from humanfriendly import format_size
+from bs4 import BeautifulSoup as BS
 from app import app 
 from catalog import Catalog, paginate, format_author
 
 app.jinja_env.globals['format_size']=format_size
 app.jinja_env.globals['format_author']=format_author
 cat = Catalog()
-PER_PAGE = 10
+PER_PAGE = 12
  
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
@@ -85,4 +86,9 @@ def is_list( author ):
   return isinstance( author, list )
 app.jinja_env.globals['is_list']=is_list
 
+def shorten( content ):
+  text = BS( content ).get_text()[:250]
+  text, s, t = text.rpartition(' ')
+  return text
+app.jinja_env.globals['shorten']=shorten
 
