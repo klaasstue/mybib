@@ -20,20 +20,17 @@
     <div class="large-12 columns">
       <div style="margin: 15px 0 0 0;	
                   width: 520px;	
-                  height: 100px;	
+                  height: 150px;	
                   overflow: hidden;
                   vertical-align: middle;
-                  margin-right: 3em;
-                  color: blue">
+                  margin-right: 3em;">
         <a data-tooltip aria-haspopup="true" class="has-tip" 
                 title="Klicke für weitere Ausgaben!"data-toggle="offCanvasLeft">
           <img src="{{ url_for('static',filename='my_library_logo.svgz') }}" 
-                style="width: 200px; 1height: auto !important;"/>
+                style="height: 150px;"/>
         </a>
       </div>
       <div class="callout" style="box-shadow:0 10px 20px rgba(0,0,0,0.3)">
-        <h1>Schaun mer mal</h1>
-        <p>Das ist ja wirklich stark. Was doch so alles geht? Warum das plötzlich alles so leicht geht...</p>
         <div class="row" style="max-width:100%">
           <div class="off-canvas-wrapper">
 
@@ -61,10 +58,9 @@
 
   <!--Der eigentliche Inhalt    -->
               {% for entry in entries %}
-              <div class="large-6 medium-12 columns">
+              <div class="large-6 medium-12 columns" style="float: left">
                 <div class="callout">
-                  <div class="media-object" style="padding: 20px 20px 20px 20px; 
-                              box-shadow:0 10px 20px rgba(0,0,0,0.3)"> 
+                  <div class="media-object" style="padding: 20px 20px 20px 20px;"> 
                     <div class="media-object-section" style="height:17em;width: 30%">
                       <img src="{{ url_for('download', filename=entry['path'], imgId=entry['pk']) }}" style="width: 100%;box-shadow:0 10px 20px rgba(0,0,0,0.3)">
                       <p><a href="{{url_for( 'download', filename=entry['path'], bookId=entry['pk'])}}">
