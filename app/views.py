@@ -2,17 +2,26 @@
 # -*- coding: utf-8 -*-
 
 import os.path as p
-from flask import url_for, send_from_directory, render_template, request, redirect
+from flask import url_for, render_template, request, make_response
 from humanfriendly import format_size
-from bs4 import BeautifulSoup as BS
 from app import app 
-from catalog import Catalog, paginate, format_author
+from catalog import Catalog
+from utils import *
 
 app.jinja_env.globals['format_size']=format_size
 app.jinja_env.globals['format_author']=format_author
+def url_for_other_page(page):
+  args = request.view_args.copy()
+  args['page'] = page
+  return url_for(request.endpoint, **args)
+
+app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+app.jinja_env.globals['is_list']=is_list
+app.jinja_env.globals['is_short']=is_short
+app.jinja_env.globals['shorten']=shorten
+
 cat = Catalog()
 PER_PAGE    = 12
-TEXT_LIMIT  = 250
  
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
@@ -70,34 +79,18 @@ def static_proxy(path):
 @app.route('/covers/<path:filename>')
 @app.route('/books/<path:filename>')
 def download( filename ):
-  if request.args:
-    fname = request.args.get('bookId')
+  if request.args.has_key('bookId'):
+    pk = request.args.get('bookId')
+    result, mimetype = cat.get_book(pk)
+    response = make_response( result )
+    response.mimetype = mimetype
   else:
-    fname = 'cover.jpg'
-  path = p.join(filename,fname)
-  return send_from_directory( app.config['BIBLIOTHEK'], path )
+    pk = request.args.get('imgId')
+    result = cat.get_img(pk)
+    response = make_response( result )
+  return response
   
 #TODO
 def make_ODPS_Fields():
   pass
 
-def url_for_other_page(page):
-  args = request.view_args.copy()
-  args['page'] = page
-  return url_for(request.endpoint, **args)
-app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-
-def is_list( author ):
-  return isinstance( author, list )
-app.jinja_env.globals['is_list']=is_list
-
-def is_short( content ):
-  text = BS( content ).get_text()[:TEXT_LIMIT]
-  return len(text) < TEXT_LIMIT
-app.jinja_env.globals['is_short']=is_short
-
-def shorten( content ):
-  text = BS( content ).get_text()[:TEXT_LIMIT]
-  text, s, t = text.rpartition(' ')
-  return text
-app.jinja_env.globals['shorten']=shorten
