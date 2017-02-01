@@ -2,16 +2,13 @@
 from app import db
 from app.model import Book
 
-session = db.session
-result=session.query(Book.pk,Book.atom_elements).all()
-entries = []
-for k, v in result:
-  v.update( pk = k)
-  entries.append(v)
+session = None
 
 class Catalog():
 
   def __init__( self ):
+    if not session:
+      _init_session()
     # Sachgebiete finden und sortieren
     sg = []
     for v in entries:
@@ -52,4 +49,19 @@ class Catalog():
     img = session.query(Book.cover_img).filter_by(pk=pk).first()
     return img
   
+  def update_img( self, pk, img ):
+    res = session.query(Book).filter_by(pk=pk).update( {Book.cover_img: img}, synchronize_session=False )
+    session.flush()
+    session.commit()
+    return res
+  
+def _init_session():
+  global session, entries
+  session = db.session
+  result=session.query(Book.pk,Book.atom_elements).all()
+  entries = []
+  for k, v in result:
+    v.update( pk = k)
+    entries.append(v)
+
 

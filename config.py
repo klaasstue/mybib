@@ -16,7 +16,7 @@ class Config(object):
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'metadata.db')
-    BIBLIOTHEK = os.environ['BIBLIOTHEK']
+#    BIBLIOTHEK = os.environ['BIBLIOTHEK']
 
 class ProductionConfig(Config):
     DEBUG = False

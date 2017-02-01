@@ -88,6 +88,7 @@ def download( filename ):
     pk = request.args.get('imgId')
     result = cat.get_img(pk)
     response = make_response( result )
+    response.mimetype = 'JPEG image data, JFIF standard 1.01'
   return response
   
 #TODO
