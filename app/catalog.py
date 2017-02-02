@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import traceback
 from app import db
 from app.model import Book
 
@@ -43,17 +44,32 @@ class Catalog():
   
   def get_book( self, pk ):
     book = session.query(Book.book_file,Book.mimetype).filter_by(pk=pk).first()
-    return book
+    return booktraceback.print_exc(file=sys.stdout)
 
   def get_img( self, pk ):
     img = session.query(Book.cover_img).filter_by(pk=pk).first()
     return img
   
-  def update_img( self, pk, img ):
-    res = session.query(Book).filter_by(pk=pk).update( {Book.cover_img: img}, synchronize_session=False )
+  def update( self, pk, **book ):
+    res = session.query(Book).filter_by(pk=pk).update( book, synchronize_session=False )
     session.flush()
     session.commit()
     return res
+  
+  def update_atom_elements( self, pk, atts ):
+    entry = session.query(Book.atom_elements).filter_by(pk=pk).first().atom_elements
+    entry.update(**atts)
+    print entry
+    try:
+      res = session.query(Book).filter_by(pk=pk).update( {Book.atom_elements:entry}, synchronize_session=False )
+      session.flush()
+      session.commit()
+    except:
+      print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      traceback.print_exc()
+      print "Es ist ein Fehler aufgetreten.\n"
+    return res
+    
   
 def _init_session():
   global session, entries

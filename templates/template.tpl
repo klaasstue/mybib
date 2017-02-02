@@ -58,11 +58,11 @@
 
   <!--Der eigentliche Inhalt    -->
               {% for entry in entries %}
-              <div class="large-6 medium-12 columns" style="float: left">
+              <div class="large-4 medium-6 columns" style="float: left">
                 <div class="callout">
                   <div class="media-object" style="padding: 20px 20px 20px 20px;"> 
-                    <div class="media-object-section" style="height:17em;width: 30%">
-                      <img src="{{ url_for('download', filename=entry['path'], imgId=entry['pk']) }}" style="width: 100%;box-shadow:0 10px 20px rgba(0,0,0,0.3)">
+                    <div class="media-object-section" style="height:16em;width: 30%">
+                      <img src="{{ url_for('download', filename=entry['path'], imgId=entry['pk']) }}" style="max-width: 100%;max-height: 15em;box-shadow:0 10px 20px rgba(0,0,0,0.3)">
                       <p><a href="{{url_for( 'download', filename=entry['path'], bookId=entry['pk'])}}">
                         <img src="{{ url_for('static', filename='download.png') }}"
                              width="12px"></a>
