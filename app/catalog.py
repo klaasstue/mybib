@@ -44,7 +44,7 @@ class Catalog():
   
   def get_book( self, pk ):
     book = session.query(Book.book_file,Book.mimetype).filter_by(pk=pk).first()
-    return booktraceback.print_exc(file=sys.stdout)
+    return book
 
   def get_img( self, pk ):
     img = session.query(Book.cover_img).filter_by(pk=pk).first()
