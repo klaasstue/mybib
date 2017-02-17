@@ -19,6 +19,7 @@ app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['is_list']=is_list
 app.jinja_env.globals['is_short']=is_short
 app.jinja_env.globals['shorten']=shorten
+app.jinja_env.globals['print_atts']=print_atts
 
 cat = Catalog()
 PER_PAGE    = 12
@@ -38,8 +39,16 @@ def home( page ):
       )
   return response
 
-@app.route('/katalog/<topic>/', defaults={'page': 1})
-@app.route('/katalog/<topic>/<int:page>')
+@app.route('/sachgebiet')
+def get_sachgebiete():
+  result = cat.sachgebiete
+  
+@app.route('/autoren')
+def get_autoren():
+  result = cat.autoren
+  
+@app.route('/sachgebiet/<topic>/', defaults={'page': 1})
+@app.route('/sachgebiet/<topic>/<int:page>')
 def get_topic( topic, page ):
   '''
   DNB Sortierung, auch wenn die etwas seltsam ist
@@ -77,10 +86,10 @@ def static_proxy(path):
   return app.send_static_file( path )
 
 @app.route('/covers/<path:filename>')
-@app.route('/books/<path:filename>')
-def download( filename ):
-  if request.args.has_key('bookId'):
-    pk = request.args.get('bookId')
+@app.route('/books/<bookId>/<path:filename>')
+def download( filename, bookId=None ):
+  if bookId:
+    pk = bookId
     result, mimetype = cat.get_book(pk)
     response = make_response( result )
     response.mimetype = mimetype
@@ -95,3 +104,24 @@ def download( filename ):
 def make_ODPS_Fields():
   pass
 
+@app.route('/katalog')
+def opds_entry():
+  content = dict(
+    urn = 'Entry',
+    links = [dict( rel = 'self', href = url_for('opds_entry'))],
+    entries = [
+      dict(
+        urn = 'Sachgebiete',
+        title = 'Sachgebiete',
+        summary = u'Die Katalogisierung der Deutschen Nationalbibliothek wird übernommen',
+        links = [ dict( type = 'application/atom+xml', href = url_for('get_sachgebiete'))]
+      ),
+      dict(
+        urn = 'Autoren',
+        title = 'Autoren',
+        summary = u'Die Katalogisierung der Deutschen Nationalbibliothek wird übernommen',
+        links = [ dict( type = 'application/atom+xml', href = url_for('get_autoren'))]
+      )
+    ]
+  )
+  return render_template('atom.tpl', **content)

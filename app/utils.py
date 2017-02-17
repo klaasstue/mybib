@@ -72,4 +72,10 @@ def shorten( content ):
   text = BS( content ).get_text()[:TEXT_LIMIT]
   text, s, t = text.rpartition(' ')
   return text
+  
+def print_atts( args ):
+  out = ''
+  for kv in args.items():
+    out+=' %s="%s"' % kv
+    return out
 

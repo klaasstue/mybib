@@ -63,7 +63,7 @@
                   <div class="media-object" style="padding: 20px 20px 20px 20px;"> 
                     <div class="media-object-section" style="height:16em;width: 30%">
                       <img src="{{ url_for('download', filename=entry['path'], imgId=entry['pk']) }}" style="max-width: 100%;max-height: 15em;box-shadow:0 10px 20px rgba(0,0,0,0.3)">
-                      <p><a href="{{url_for( 'download', filename=entry['path'], bookId=entry['pk'])}}">
+                      <p><a href="{{url_for( 'download', filename=entry['file'], bookId=entry['pk'])}}">
                         <img src="{{ url_for('static', filename='download.png') }}"
                              width="12px"></a>
                          | {{ format_size(entry['size']) }} | <img src="{{ url_for('static', filename='EPUB_logo.svg') }}" width="12px"> 

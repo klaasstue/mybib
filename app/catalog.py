@@ -4,6 +4,10 @@ from app import db
 from app.model import Book
 
 session = None
+#session = True
+#import json
+#with open('data/base.json') as fd:
+#  entries = json.load(fd).values()
 
 class Catalog():
 
