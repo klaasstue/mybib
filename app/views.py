@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os.path as p
+import os.path as p, datetime as d
 from flask import url_for, render_template, request, make_response
 from humanfriendly import format_size
 from app import app 
@@ -23,7 +23,10 @@ app.jinja_env.globals['print_atts']=print_atts
 
 cat = Catalog()
 PER_PAGE    = 12
- 
+
+def now():
+	return d.datetime.now() - d.timedelta(days=45)
+	
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
 def home( page ):
@@ -43,9 +46,9 @@ def home( page ):
 def get_sachgebiete():
   result = cat.sachgebiete
   
-@app.route('/neu/<int:y>/<int:m>/<int:d>',defaults=['page':1])
-@app.route('/neu/<int:y>/<int:m>/<int:d>')
-def get_latest():
+@app.route('/neu',defaults=dict(y=now().year,m=now().month,d=now().day,page=1))
+@app.route('/neu/<int:y>/<int:m>/<int:d>/<int:page>')
+def get_latest(y,m,d,page):
   result = cat.get_all_newer(y,m,d)
   result, pagination = paginate( result , page, PER_PAGE )
   response = render_template('template.tpl',
