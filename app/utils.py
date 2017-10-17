@@ -38,7 +38,7 @@ class Pagination(object):
               
 def paginate(result, page, per_page):
   '''
-  Bewerte, ob result paginierte werden muss und paginiere
+  Bewerte, ob result paginiert werden muss und paginiere
   '''
   nop     = len(result)
   if nop > per_page:
