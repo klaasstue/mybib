@@ -43,6 +43,18 @@ def home( page ):
 def get_sachgebiete():
   result = cat.sachgebiete
   
+@app.route('/neu/<int:y>/<int:m>/<int:d>',defaults=['page':1])
+@app.route('/neu/<int:y>/<int:m>/<int:d>')
+def get_latest():
+  result = cat.get_all_newer(y,m,d)
+  result, pagination = paginate( result , page, PER_PAGE )
+  response = render_template('template.tpl',
+      pagination = pagination,
+      entries = result,
+      topics  = cat.sachgebiete
+      )
+  return response
+  
 @app.route('/autoren')
 def get_autoren():
   result = cat.autoren
