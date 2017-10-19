@@ -19,7 +19,7 @@ class Catalog():
 		sg = []
 		for v in entries:
 			for w in v['Sachgruppen']:
-				sg.append(w)
+				sg.append(w.strip())
 		sg = list(set(sg))
 		sg.sort()
 		self.sachgebiete = sg
