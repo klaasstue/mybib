@@ -21,3 +21,5 @@ packaging==16.8
 pyparsing==2.1.10
 six==1.10.0
 psycopg2==2.4.5
+PyPDF2==1.26.0
+epub==0.5.2

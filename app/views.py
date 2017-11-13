@@ -4,7 +4,7 @@
 import os.path as p, datetime as d
 from flask import url_for, render_template, request, make_response
 from humanfriendly import format_size
-from app import app 
+from app import app, auth 
 from catalog import Catalog
 from utils import *
 
@@ -20,7 +20,7 @@ app.jinja_env.globals['is_list']=is_list
 app.jinja_env.globals['is_short']=is_short
 app.jinja_env.globals['shorten']=shorten
 app.jinja_env.globals['print_atts']=print_atts
-
+authDB = auth.FlaskRealmDigestDB('PrivateLibraryRealm')
 cat = Catalog()
 PER_PAGE    = 12
 
@@ -29,6 +29,7 @@ def now():
 	
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
+@authDB.requires_auth
 def home( page ):
   '''
   Die Einstiegsseite a la ARD & ZDF. Mit alphabetischer und thematischer Navigation
@@ -43,11 +44,13 @@ def home( page ):
   return response
 
 @app.route('/sachgebiet')
+@authDB.requires_auth
 def get_sachgebiete():
   result = cat.sachgebiete
   
 @app.route('/neu',defaults=dict(y=now().year,m=now().month,d=now().day,page=1))
 @app.route('/neu/<int:y>/<int:m>/<int:d>/<int:page>')
+@authDB.requires_auth
 def get_latest(y,m,d,page):
   result = cat.get_all_newer(y,m,d)
   result, pagination = paginate( result , page, PER_PAGE )
@@ -59,6 +62,7 @@ def get_latest(y,m,d,page):
   return response
   
 @app.route('/autoren')
+@authDB.requires_auth
 def get_autoren():
   result = cat.autoren
   
@@ -79,6 +83,7 @@ def get_topic( topic, page ):
 
 @app.route('/by_author/<author>/', defaults={'page': 1})
 @app.route('/by_author/<author>/<int:page>')
+@authDB.requires_auth
 def get_author( author, page ):
   '''
   DNB Sortierung, auch wenn die etwas seltsam ist
@@ -93,6 +98,7 @@ def get_author( author, page ):
   return response
 
 @app.route('/res/<path>')
+@authDB.requires_auth
 def static_proxy(path):
   '''
   Alles unterhalb template_ressources
@@ -102,6 +108,7 @@ def static_proxy(path):
 
 @app.route('/covers/<path:filename>')
 @app.route('/books/<bookId>/<path:filename>')
+@authDB.requires_auth
 def download( filename, bookId=None ):
   if bookId:
     pk = bookId
@@ -120,6 +127,7 @@ def make_ODPS_Fields():
   pass
 
 @app.route('/katalog')
+@authDB.requires_auth
 def opds_entry():
   content = dict(
     urn = 'Entry',
