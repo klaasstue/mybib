@@ -20,7 +20,10 @@ app.jinja_env.globals['is_list']=is_list
 app.jinja_env.globals['is_short']=is_short
 app.jinja_env.globals['shorten']=shorten
 app.jinja_env.globals['print_atts']=print_atts
-authDB = auth.FlaskRealmDigestDB('PrivateLibraryRealm')
+DER_FILE = "bib.der"
+USER_DATA = ".ud.txt"
+db = auth.load_user_data( USER_DATA, DER_FILE )
+authDB = auth.FlaskRealmDigestDB( 'PrivateLibraryRealm', db = db )
 cat = Catalog()
 PER_PAGE    = 12
 

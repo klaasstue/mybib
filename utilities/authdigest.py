@@ -53,11 +53,10 @@ class RealmDigestDB(object):
                      default is 'md5'
     """
 
-    def __init__(self, realm, algorithm='md5'):
+    def __init__(self, realm, algorithm='md5', db = dict()):
         self.realm = realm
         self.alg = self.newAlgorithm(algorithm)
-        with open(".access.json") as f:
-            self.db = json.load(f)
+        self.db = db
 
     @property
     def algorithm(self):
