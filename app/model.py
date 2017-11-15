@@ -3,12 +3,31 @@
 ################################################################################
 #
 ################################################################################
-import uuid
+import uuid, os
+from Crypto.Cipher import AES
+from binascii import hexlify, unhexlify
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import JSON
 from app import app,db
 
+cipher = AES.new( unhexlify( os.environ.get('BIBLIO_NUMBER') ) )
 
+def decrypt(data):
+    return cipher.decrypt(unhexlify(data)).rstrip()
+
+def encrypt(data):
+    data = data + (" " * (16 - (len(data) % 16)))
+    return hexlify(cipher.encrypt(data))
+
+class EncLargeBinary(db.TypeDecorator):
+	impl = db.LargeBinary
+	
+	def process_bind_param( self, value, dialect ):
+		return encrypt( value )
+		
+	def process_result_value( self, value, dialect ):
+		return decrypt( value )
+		
 class Book(db.Model):
   """
   This model stores the book file.
@@ -19,7 +38,7 @@ class Book(db.Model):
 
   pk              = db.Column( db.Integer, primary_key=True )
   mimetype        = db.Column( db.String(200), nullable=True )
-  book_file       = db.Column( db.LargeBinary() )
+  book_file       = db.Column( EncLargeBinary() )
   time_added      = db.Column( db.DateTime(timezone=True), server_default=func.now() )
   cover_img       = db.Column( db.LargeBinary() )
   atom_elements   = db.Column( JSON )

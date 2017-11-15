@@ -93,4 +93,3 @@ def _init_session():
 		v.update( pk = k, ctime=tm)
 		entries.append(v)
 
-
