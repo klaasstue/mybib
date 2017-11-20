@@ -84,6 +84,22 @@ def get_topic( topic, page ):
       )
   return response
 
+@app.route('/search/', defaults={'page': 1})
+@app.route('/search>/<int:page>')
+def search( page ):
+  '''
+  DNB Sortierung, auch wenn die etwas seltsam ist
+  '''
+  term = request.args.get('q')
+  result  = cat.search(term)
+  result, pagination = paginate( result , page, PER_PAGE )
+  response = render_template('template.tpl',
+      pagination = pagination,
+      entries = result,
+      topics  = cat.sachgebiete
+      )
+  return response
+
 @app.route('/by_author/<author>/', defaults={'page': 1})
 @app.route('/by_author/<author>/<int:page>')
 @authDB.requires_auth

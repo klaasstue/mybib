@@ -8,6 +8,6 @@ app.config.from_object( environ['APP_SETTINGS'] )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-import views, model, auth
-from catalog import Catalog
+import model, views
+#from catalog import Catalog
 
