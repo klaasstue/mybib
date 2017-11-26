@@ -4,7 +4,7 @@
 import os.path as p, datetime as d
 from flask import url_for, render_template, request, make_response
 from humanfriendly import format_size
-from app import app, auth 
+from app import app, authDB 
 from catalog import Catalog
 from utils import *
 
@@ -20,30 +20,33 @@ app.jinja_env.globals['is_list']=is_list
 app.jinja_env.globals['is_short']=is_short
 app.jinja_env.globals['shorten']=shorten
 app.jinja_env.globals['print_atts']=print_atts
-DER_FILE = "bib.der"
-USER_DATA = ".ud.txt"
-db = auth.load_user_data( USER_DATA, DER_FILE )
-authDB = auth.FlaskRealmDigestDB( 'PrivateLibraryRealm', db = db )
 cat = Catalog()
 PER_PAGE    = 12
 
 def now():
-	return d.datetime.now() - d.timedelta(days=45)
-	
+  return d.datetime.now() - d.timedelta(days=45)
+  
 @app.route('/', defaults={'page': 1})
 @app.route('/<int:page>')
 @authDB.requires_auth
 def home( page ):
+#  '''
+#  Die Einstiegsseite a la ARD & ZDF. Mit alphabetischer und thematischer Navigation
+#  '''
+#  result  = cat.get_all()
+#  result, pagination = paginate( result , page, PER_PAGE )
+#  response = render_template('template.tpl',
+#      pagination  = pagination,
+#      entries     = result,
+#      topics      = cat.sachgebiete
+#      )
   '''
-  Die Einstiegsseite a la ARD & ZDF. Mit alphabetischer und thematischer Navigation
+  Die gesamte Bibliothek auf einer Seite
   '''
-  result  = cat.get_all()
-  result, pagination = paginate( result , page, PER_PAGE )
+  result = cat.get_all_sortiert()
   response = render_template('template.tpl',
-      pagination  = pagination,
-      entries     = result,
-      topics      = cat.sachgebiete
-      )
+    panels = result
+  )
   return response
 
 @app.route('/sachgebiet')
