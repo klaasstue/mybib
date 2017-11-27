@@ -2,7 +2,7 @@ import re
 from math import ceil
 from bs4 import BeautifulSoup as BS
 
-TEXT_LIMIT  = 100
+TEXT_LIMIT  = 512
 
 class Pagination(object):
 

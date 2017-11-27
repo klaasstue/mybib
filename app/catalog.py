@@ -47,7 +47,11 @@ class Catalog():
 		self.buecher.sort(key = lambda e:e['authors'])
 		self.buecher_sortiert = strukturierte_liste
 		
-	def search( self, query, stmnt = stmnt ):
+	def search( self, query, stmnt = stmnt_sug ):
+		if len(query.split()) > 1:
+			q = ''
+			for w in query.split(): q += w+' & '
+			query = q.strip(' & ')
 		res = conn.execute(stmnt, x = query ).fetchall()
 		j		= app.json_decoder()
 		res = [( pk, j.decode(e) ) for pk, e in res]
@@ -55,11 +59,7 @@ class Catalog():
 		return [e for pk, e in res]
 
 	def get_suggestions( self, query ):
-		if len(query.split()) > 1:
-			q = ''
-			for w in query.split(): q += w+' & '
-			query = q.strip(' & ')
-		return [( e.get('pk'),'%s: %s' % ( e.get('authors')[0], e.get('title') )) for e in self.search( query, stmnt = stmnt_sug )]
+		return [( e.get('pk'),'%s: %s' % ( e.get('authors')[0], e.get('title') )) for e in self.search( query )]
 
 	def get_schlagwort( self, name ):
 		return filter( lambda e:name in e.get(u'Schlagwörter'), self.katalogisiert ) 

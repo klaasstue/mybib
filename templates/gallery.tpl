@@ -3,7 +3,7 @@
 <div class="grid-container">
   <div class="grid-x grid-padding-x small-up-2 medium-up-3 large-up-6">
 
-		{% for item in label['items'][6*index:6*(index + 1)] %}
+		{% for item in entries %}
 			
     <div class="cell">
 		    <div class="card container">
@@ -43,4 +43,11 @@
 </div>
 
 <!-- End Slide Content -->
+
+      {% if pagination %}
+
+        {% from 'render_pagination.macro' import render_pagination %}
+        {{ render_pagination(pagination) }}
+        
+      {% endif %}
 

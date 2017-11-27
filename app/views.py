@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os.path as p, datetime as d
+import os.path as p, datetime as d, json
 from flask import url_for, render_template, request, make_response
 from humanfriendly import format_size
 from app import app, authDB 
@@ -45,6 +45,7 @@ def home( page ):
   '''
   result = cat.get_all_sortiert()
   response = render_template('template.tpl',
+  	template = 'panel.tpl',
     panels = result
   )
   return response
@@ -87,6 +88,17 @@ def get_topic( topic, page ):
       )
   return response
 
+@app.route('/suggest/')
+def suggest(  ):
+  '''
+  Ein JSON mit suggestions, und zwar 
+  '''
+  term = request.args.get('q')
+  result  = cat.get_suggestions(term)
+#  response = [dict(key=key,txt=txt) for key, txt in result]
+  response = [txt for key, txt in result]
+  return json.dumps( response )
+
 @app.route('/search/', defaults={'page': 1})
 @app.route('/search>/<int:page>')
 def search( page ):
@@ -97,6 +109,7 @@ def search( page ):
   result  = cat.search(term)
   result, pagination = paginate( result , page, PER_PAGE )
   response = render_template('template.tpl',
+  		template = "gallery.tpl",
       pagination = pagination,
       entries = result,
       topics  = cat.sachgebiete
