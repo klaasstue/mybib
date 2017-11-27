@@ -88,6 +88,10 @@ class Catalog():
 		book = session.query(Book.atom_elements,Book.time_added).filter_by(pk=pk).first()
 		return book
 
+	def get_atom_by_isbn( self, isbn ):
+		book = session.query(Book.atom_elements,Book.time_added).filter(Book.atom_elements['isbn'].astext == isbn).first()
+		return book
+
 	def get_img( self, pk ):
 		img = session.query(Book.cover_img).filter_by(pk=pk).first()
 		return img
