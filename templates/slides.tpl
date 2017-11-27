@@ -10,22 +10,8 @@
 		      <img src="{{ url_for('download', filename=item['path'], imgId=item['pk']) }}">
 		      <div class="overlay">
 
-          {% if is_short( item['content']) %}
-
             {{ item['content'] }}
-
-          {% else %}
           
-            <p id="short-{{item['isbn']}}">
-              {{ shorten( item['content'] ) }}... 
-							<a data-open="detail-{{ item['pk'] }}">mehr</a>
-            </p>
-          
-							
-							{% include 'detail.tpl' %}
-
-          {% endif %}
-
 		      </div>
 		    </div>
 

@@ -114,7 +114,31 @@ class Catalog():
 			traceback.print_exc()
 			print "Es ist ein Fehler aufgetreten.\n"
 		return res
-		
+	
+	def add_book( self, fd_book, fd_img, entry ):
+		'''
+		Add book where fd_book and fd_img must be file descriptor like objects or 
+		binary data. Entry must be a jsonizable object, that at least must contain
+		the key mimetype.
+		'''
+		if not isinstance(fd_book, str):
+			book_binary = fd_book.read()
+		else:
+			book_binary = fd_book
+		if not isinstance(fd_img, str):
+			img_binary	= fd_img.read()
+		else:
+			img_binary 	= fd_img
+		session.add(
+			Book(
+				book_file		 	= book_binary, 
+				cover_img		 	= img_binary, 
+				mimetype			= entry['mimetype'], 
+				atom_elements = entry
+			)
+		)
+		session.flush()
+		session.commit()
 	
 def _init_session():
 	global session, entries, strukturierte_liste

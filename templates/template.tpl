@@ -9,31 +9,18 @@
     <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/jquery.auto-complete.css') }}">
   </head>
-  <body>
+  <body style="background-image:url({{ url_for('static',filename='my_library_logo.svgz') }}); background-size:120%; background-repeat: no-repeat;background-attachment:fixed">
   
 	<!--Die Navbar mit Suchfenster -->
 
 	<div class="top-bar" id="example-menu">
 		<div class="top-bar-left">
-		  <ul class="dropdown menu" data-dropdown-menu>
-		    <li class="menu-text">Site Title</li>
-		    <li class="has-submenu">
-		      <a href="#0">One</a>
-		      <ul class="submenu menu vertical" data-submenu>
-		        <li><a href="#0">One</a></li>
-		        <li><a href="#0">Two</a></li>
-		        <li><a href="#0">Three</a></li>
-		      </ul>
-		    </li>
-		    <li><a href="#0">Two</a></li>
-		    <li><a href="#0">Three</a></li>
-		  </ul>
 		</div>
 		<div class="top-bar-right">
       <form id="search" action="{{ url_for('search') }}">
 				<ul class="menu">
 				  <li><input name="q" style="max-width:100%;width:400px;" type="search" placeholder="Volltextsuche"></li>
-				  <li><button type="button" class="button">Search</button></li>
+				  <li><button type="submit" class="button">Search</button></li>
 				</ul>
 			</form>
 		</div>
