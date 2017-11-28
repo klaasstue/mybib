@@ -50,7 +50,9 @@ class Catalog():
 	def search( self, query, stmnt = stmnt_sug ):
 		if len(query.split()) > 1:
 			q = ''
-			for w in query.split(): q += w+' & '
+			for w in query.split():
+				w = filter(lambda b: b.isalnum(),w)
+				q += w + ' & '
 			query = q.strip(' & ')
 		res = conn.execute(stmnt, x = query ).fetchall()
 		j		= app.json_decoder()
