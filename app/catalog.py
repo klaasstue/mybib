@@ -36,18 +36,19 @@ class Catalog():
 		self.autoren = au
 		# Schlagwörter finden und sortieren
 		sw = []
-		swe = filter(lambda e:e.get(u'Schlagwörter'), entries)
-		[[ sw.append(w) for w in e.get(u'Schlagwörter') ]	for e in swe]
+		swe = filter(lambda e:e.get(u'Schlagworte'), entries)
+		[[ sw.append(w) for w in e.get(u'Schlagworte') ]	for e in swe]
 		sw = list( set( sw ) )
 		sw.sort()
 		self.schlagworte = sw
-		self.katalogisiert = filter(lambda e:e.get(u'Schlagwörter'), entries)
+		self.katalogisiert = filter(lambda e:e.get(u'Schlagworte'), entries)
 		# buecher nach Autoren sortieren
 		self.buecher = entries
 		self.buecher.sort(key = lambda e:e['authors'])
 		self.buecher_sortiert = strukturierte_liste
 		
 	def search( self, query, stmnt = stmnt_sug ):
+		"Volltextsuche auf allen Textfeldern in atom-elements"
 		if len(query.split()) > 1:
 			q = ''
 			for w in query.split():
@@ -61,10 +62,15 @@ class Catalog():
 		return [e for pk, e in res]
 
 	def get_suggestions( self, query ):
+		"pk und Autor, Titel für die aufklappende suggestionsliste"
 		return [( e.get('pk'),'%s: %s' % ( e.get('authors')[0], e.get('title') )) for e in self.search( query )]
 
-	def get_schlagwort( self, name ):
-		return filter( lambda e:name in e.get(u'Schlagwörter'), self.katalogisiert ) 
+	def get_book_md( self, pk ):
+		"Gib metadaten zum Busch mit primary key pk"
+		return pk_map.get(pk)
+		
+	def get_schlagworte( self, term ):
+		return filter(lambda w: term.lower()  in w.lower(), self.schlagworte ) 
 		
 	def get_sachgebiet( self, name ):
 		return filter( lambda e:name in e['Sachgruppen'], self.buecher ) 
@@ -143,13 +149,19 @@ class Catalog():
 		session.commit()
 	
 def _init_session():
-	global session, entries, strukturierte_liste
+	global session, entries, strukturierte_liste, pk_map, isbn_map, file_map 
 	session = db.session
 	result=session.query(Book.pk,Book.atom_elements,Book.time_added).all()
 	entries = []
+	pk_map = {}
+	isbn_map = {}
+	file_map = {}
 	for k, v, tm in result:
 		v.update( pk = k, ctime=tm)
 		entries.append(v)
+		pk_map[k] = v
+		isbn_map[v['isbn']] = v
+		file_map[v['file']] = v
 	'Eine strukturieret Liste vorbereiten'
 	l=list(set(['%s/%s'% (e.get('panel'),e.get('label')) for k,e,tm in result]))
 	l.sort()

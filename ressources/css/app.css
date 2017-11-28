@@ -7,6 +7,22 @@
 	box-shadow: 5px 5px 30px 5px #888888;
 }
 
+/*Für das Buch Cover auf der details Seite*/
+
+.detail-img{
+	position: fixed;
+	width: 100%;
+	z-index: -1;
+	padding-right: 30px;
+}
+
+.detail{
+	margin-top:50%;
+	margin-bottom:50%;
+	background-color: #fff;
+	box-shadow: 0 -5px 20px 0 #000; 
+}
+
 /*Für die Thumbnails mit Text*/
 
 .container {

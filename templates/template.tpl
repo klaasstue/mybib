@@ -15,11 +15,12 @@
 
 	<div class="top-bar" id="example-menu">
 		<div class="top-bar-left">
+			<a href="{{url_for('home')}}">HOME</a>
 		</div>
 		<div class="top-bar-right">
       <form id="search" action="{{ url_for('search') }}">
 				<ul class="menu">
-				  <li><input name="q" style="max-width:100%;width:400px;" type="search" placeholder="Volltextsuche"></li>
+				  <li><input id="Volltextsuche" name="q" style="max-width:100%;width:400px;" type="search" placeholder="Volltextsuche"></li>
 				  <li><button type="submit" class="button">Search</button></li>
 				</ul>
 			</form>
@@ -51,9 +52,30 @@
     <script src="{{ url_for( 'static', filename = 'js/vendor/jquery.auto-complete.min.js') }}"></script>
     <script src="{{ url_for( 'static', filename = 'js/app.js') }}"></script>
     <script>
-      $('input[name="q"]').autoComplete({
+      $('#Volltextsuche').autoComplete({
         source: function(term, response){
           $.getJSON("{{ url_for('suggest') }}", { q: term }, function(data){
+          	response(data);
+          });
+        },
+        
+        renderItem: function (item, search){
+            // escape special characters
+            search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
+            return '<div class="autocomplete-suggestion" data-val="' + search + '" data-pk="' + item[0] + '">' + item[1].replace(re, "<b>$1</b>") + '</div>';
+        },
+        
+        onSelect: function(e, term, item){
+        	bookId 	= item.data('pk');
+        	url 		= "{{ url_for('get_book',bookId='') }}" + bookId;
+        	window.location.href = url ;
+        }
+      });
+
+      $('#Schlagwortsuche').autoComplete({
+        source: function(term, response){
+          $.getJSON("{{ url_for('schlagworte') }}", { q: term }, function(data){
           	response(data);
           });
         }

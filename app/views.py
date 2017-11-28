@@ -13,6 +13,8 @@ app.jinja_env.globals['format_author']=format_author
 def url_for_other_page(page):
   args = request.view_args.copy()
   args['page'] = page
+  term = request.args.get('q')
+  if term: args['q'] = term
   return url_for(request.endpoint, **args)
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
@@ -62,6 +64,7 @@ def get_latest(y,m,d,page):
   result = cat.get_all_newer(y,m,d)
   result, pagination = paginate( result , page, PER_PAGE )
   response = render_template('template.tpl',
+  		template = "gallery.tpl",
       pagination = pagination,
       entries = result,
       topics  = cat.sachgebiete
@@ -75,6 +78,7 @@ def get_autoren():
   
 @app.route('/sachgebiet/<topic>/', defaults={'page': 1})
 @app.route('/sachgebiet/<topic>/<int:page>')
+@authDB.requires_auth
 def get_topic( topic, page ):
   '''
   DNB Sortierung, auch wenn die etwas seltsam ist
@@ -82,6 +86,7 @@ def get_topic( topic, page ):
   result  = cat.get_sachgebiet(topic)
   result, pagination = paginate( result , page, PER_PAGE )
   response = render_template('template.tpl',
+  		template = "gallery.tpl",
       pagination = pagination,
       entries = result,
       topics  = cat.sachgebiete
@@ -89,6 +94,7 @@ def get_topic( topic, page ):
   return response
 
 @app.route('/suggest/')
+@authDB.requires_auth
 def suggest(  ):
   '''
   Ein JSON mit suggestions, und zwar 
@@ -96,11 +102,22 @@ def suggest(  ):
   term = request.args.get('q')
   result  = cat.get_suggestions(term)
 #  response = [dict(key=key,txt=txt) for key, txt in result]
-  response = [txt for key, txt in result]
+  response = [(key,txt) for key, txt in result]
+  return json.dumps( response )
+
+@app.route('/schlagworte/')
+@authDB.requires_auth
+def schlagworte(  ):
+  '''
+  Ein JSON mit suggestions, und zwar 
+  '''
+  term = request.args.get('q')
+  response  = cat.get_schlagworte(term)
   return json.dumps( response )
 
 @app.route('/search/', defaults={'page': 1})
-@app.route('/search>/<int:page>')
+@app.route('/search/<int:page>')
+@authDB.requires_auth
 def search( page ):
   '''
   DNB Sortierung, auch wenn die etwas seltsam ist
@@ -126,7 +143,8 @@ def get_author( author, page ):
   result  = cat.get_autor(author)
   result, pagination = paginate( result , page, PER_PAGE )
   response = render_template('template.tpl',
-      pagination = pagination,
+   		template = "gallery.tpl",
+	    pagination = pagination,
       entries = result,
       authors  = cat.autoren
       )
@@ -140,6 +158,17 @@ def static_proxy(path):
   '''
   # send_static_file will guess the correct MIME type
   return app.send_static_file( path )
+
+@app.route('/books/<bookId>')
+@authDB.requires_auth
+def get_book( bookId ):
+	item = cat.get_book_md( int(bookId) )
+	response = render_template("template.tpl",
+		template 	= "detail.tpl",
+		item			= item
+	)
+	return response
+
 
 @app.route('/covers/<path:filename>')
 @app.route('/books/<bookId>/<path:filename>')
