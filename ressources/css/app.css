@@ -83,7 +83,7 @@ input {
 
 /*Der linke Teil der Menüzeile*/
 
-.top-bar .top-bar-left, .tabs-title {
+.top-bar .top-bar-left, .tabs {
 	-ms-flex: 1 1 auto;
 	flex: 1 1 auto;
 	margin-right: auto;
@@ -157,10 +157,15 @@ input {
 
 /*Nach Sachgebieten*/
 
+.tabs{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .tabs-title {
-/*    position: absolute;*/
-	background-color: #1e489d;
-  min-width: 160px;
+  padding: 1rem;
+  margin: 0;
+  color: #00bfff;
 }
 
 .tabs-title:hover, .is_active {
@@ -205,7 +210,9 @@ input {
 }
 .thumbnail{
 	box-shadow: 5px 5px 30px 5px #0e0d0d;
-  width:100%;
+  width:80%;
+  display: block;
+  margin: 0 auto;
 }
 
 /*Pagination*/

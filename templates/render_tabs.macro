@@ -6,15 +6,15 @@
 
   {% for label in labels %}
 
-   {% if label['ind'] == 1 %}
+   {% if label['ind'] == 0 %}
 
-    <div class="tabs-title is-active" id="#label1" onclick=openTab({{label['ind']}})>{{ label['label'] }}</div>
+    <h2 class="tabs-title is_active" id="#label1" onclick=openTab({{label['ind']}})>{{ label['label'] }}</h2>
 
    {% else %} 
 
-    <div class="tabs-title" id="#label{{ label['ind'] }}" onclick=openTab({{label['ind']}})>
+    <h2 class="tabs-title" id="#label{{ label['ind'] }}" onclick=openTab({{label['ind']}})>
         {{ label['label'] }}
-    </div>
+    </h2>
 
    {% endif %}
 

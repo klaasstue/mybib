@@ -36,13 +36,11 @@ def now():
 @authDB.requires_auth
 def home( page ):
   '''
-  Die Einstiegsseite a la ARD & ZDF. Mit alphabetischer und thematischer Navigation
+  Die Einstiegsseite ganz unstrukturiert
   '''
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage erhalten!"))
+#TODO: Einstiegseite mit letzter oder zufälliger Buchauswahl 
   result  = cat.get_all()
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Daten geholt"))
   result, pagination = paginate( result , page, PER_PAGE )
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Seite paginiert"))
   response = render_template('template.tpl',
       template = "gallery.tpl",
       topic = u"Meine kleine Bücherei",
@@ -50,15 +48,6 @@ def home( page ):
       entries     = result,
       topics      = cat.sachgebiete
       )
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Rendering durchgeführt"))
-#  '''
-#  Die gesamte Bibliothek auf einer Seite
-#  '''
-#  result = cat.get_all_sortiert()
-#  response = render_template('template.tpl',
-#    template = 'panel.tpl',
-#    panels = result
-#  )
   return response
 
 @app.route('/neu',defaults=dict(y=now().year,m=now().month,d=now().day,page=1))
@@ -76,24 +65,6 @@ def get_latest(y,m,d,page):
       )
   return response
   
-#@app.route('/sachgebiet/<topic>/', defaults={'page': 1})
-#@app.route('/sachgebiet/<topic>/<int:page>')
-#@authDB.requires_auth
-#def get_topic( topic, page ):
-#  '''
-#  DNB Sortierung, auch wenn die etwas seltsam ist
-#  '''
-#  result  = cat.get_sachgebiet(topic)
-#  result, pagination = paginate( result , page, PER_PAGE )
-#  response = render_template('template.tpl',
-#      template = "gallery.tpl",
-#      topic = topic,
-#      pagination = pagination,
-#      entries = result,
-#      topics  = cat.sachgebiete
-#      )
-#  return response
-
 @app.route('/sachgebiet/<topic>/', defaults={'page': 1})
 @app.route('/sachgebiet/<topic>/<int:page>')
 @authDB.requires_auth
@@ -101,7 +72,6 @@ def get_topic( topic, page ):
   '''
   Alle Bücher eines Sachgebiets nach Rubriken
   '''
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage erhalten!"))
   "Jedes label braucht ne Nummer und ggf. ne pagination"
   i=0;
   labels = cat.get_sachgebiet_sortiert(topic).get('labels')
@@ -118,7 +88,6 @@ def get_topic( topic, page ):
       page_queues = [label.get('pagination_queue') for label in labels],
       topics  = cat.sachgebiete
       )
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage bearbeitet!"))
   return response
 
 @app.route('/json/sachgebiet/<topic>/', defaults={'page': 1})
@@ -128,7 +97,6 @@ def get_label( topic, page ):
   '''
   Alle Bücher einer Rubrik eines Sachgebiets als JSON
   '''
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage erhalten!"))
   label = request.args.get('q')
   app.logger.debug('label ist ' + label)
   result  = cat.get_rubrik(topic,label)
@@ -141,7 +109,6 @@ def get_label( topic, page ):
     ) for e in result
   ]
   response = json.dumps( result )
-  app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage bearbeitet!"))
   return response
 
 @app.route('/suggest/')
@@ -152,7 +119,6 @@ def suggest(  ):
   '''
   term = request.args.get('q')
   result  = cat.get_suggestions(term)
-#  response = [dict(key=key,txt=txt) for key, txt in result]
   response = [(key,txt) for key, txt in result]
   return json.dumps( response )
 
