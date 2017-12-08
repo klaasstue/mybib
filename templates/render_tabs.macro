@@ -6,17 +6,12 @@
 
   {% for label in labels %}
 
-   {% if label['ind'] == 0 %}
 
-    <h2 class="tabs-title is_active" id="#label1" onclick=openTab({{label['ind']}})>{{ label['label'] }}</h2>
-
-   {% else %} 
-
-    <h2 class="tabs-title" id="#label{{ label['ind'] }}" onclick=openTab({{label['ind']}})>
+    <h2 class="tabs-title{% if label['ind'] == 0 %} is_active{% endif %}" id="#label{{ label['ind'] }}" onclick=openTab({{label['ind']}})>
         {{ label['label'] }}
     </h2>
 
-   {% endif %}
+   
 
   {% endfor %}
 
@@ -26,7 +21,7 @@
 
 	  {% for label in labels %}
    
-    <div class="tabs-panel{% if label['ind'] != 1 %} is_hidden {% endif %}" id="label{{ label['ind'] }}">
+    <div class="tabs-panel{% if label['ind'] != 0 %} is_hidden {% endif %}" id="label{{ label['ind'] }}">
       
       {{ render_gallery( label.get('items'), label.get('pagination') ) }}
       
