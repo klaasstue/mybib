@@ -57,11 +57,13 @@ if __name__=='__main__':
         app.logger.error('%s will be ignored, because it is not a key value pair!',kv)
 
   # log Flask events
-  from time import asctime
+#  from time import asctime
+  from time import time, asctime
   app.logger.debug(u"Flask server started " + asctime())
   @app.after_request
   def write_access_log(response):
-      app.logger.debug(u"%s %s -> %s" % (asctime(), request.path, response.status_code))
+      app.logger.debug(u"%s %s -> %s" % (time(), request.path, response.status_code))
+#      app.logger.debug(u"%s %s -> %s" % (asctime(), request.path, response.status_code))
       return response
 
   app.run( **server_opts )

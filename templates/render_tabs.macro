@@ -1,0 +1,46 @@
+{% from 'render_gallery.macro' import render_gallery %}
+
+{% macro render_tabs( labels ) %}	
+
+  <div class="tabs">
+
+  {% for label in labels %}
+
+   {% if label['ind'] == 1 %}
+
+    <div class="tabs-title is-active" id="#label1" onclick=openTab({{label['ind']}})>{{ label['label'] }}</div>
+
+   {% else %} 
+
+    <div class="tabs-title" id="#label{{ label['ind'] }}" onclick=openTab({{label['ind']}})>
+        {{ label['label'] }}
+    </div>
+
+   {% endif %}
+
+  {% endfor %}
+
+  </div>
+
+  <div class="tabs-content">
+
+	  {% for label in labels %}
+   
+    <div class="tabs-panel{% if label['ind'] != 1 %} is_hidden {% endif %}" id="label{{ label['ind'] }}">
+      
+      {{ render_gallery( label.get('items'), label.get('pagination') ) }}
+      
+      {% if label.get('pagination_queue') %}
+      
+           <div id="more_{{ label['ind']}}"><a onclick="loadJSONBooklist('{{ label['label'] }}', {{ label['ind'] }})">mehr...</a></div>
+      
+      {% endif %}
+    </div>
+    
+    
+	  {% endfor %}
+
+  </div>
+
+{% endmacro %}
+

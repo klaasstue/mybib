@@ -49,6 +49,19 @@ def paginate(result, page, per_page):
     pagination = None
   return result, pagination
 
+def get_pagination_queue(result, per_page):
+  '''
+  Das Template erwartet eine queue, aus der es mit jedem more-klick
+  weitere per_page items darstellt.
+  '''
+  nop     = len(result)
+  if nop > per_page:
+    pages   = int(ceil( nop / float(per_page) ))
+    pagination_queue = range( 2, pages + 1 )
+  else:
+    pagination_queue = list()
+  return pagination_queue
+
 def format_author( author ):
   '''
   Erzeuge Reihenfolge Vorname Name

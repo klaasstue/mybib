@@ -1,0 +1,26 @@
+{% from 'render_thumbnail.macro' import render_thumbnail %}
+
+{% macro render_gallery( items, pagination = None ) %}	
+
+<!-- Slide Content -->
+
+    <div class="wrapper">
+
+	      {% for item in items %}
+			
+		        {{ render_thumbnail( item ) }}
+
+		    {% endfor %}
+
+    </div>
+
+<!-- End Slide Content -->
+
+      {% if pagination %}
+
+        {% from 'render_pagination.macro' import render_pagination %}
+        {{ render_pagination(pagination) }}
+        
+      {% endif %}
+
+{% endmacro %}

@@ -4,18 +4,39 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foundation for Sites</title>
-    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/foundation.css') }}">
-    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/app.css') }}">
+    <title>Meine kleine Bücherei</title>
+<!-- <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>-->
+<!--    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/slick.css') }}">-->
+<!--    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/slick-theme.css') }}">-->
     <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/jquery.auto-complete.css') }}">
+<!--    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/slick-style.css') }}">-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename = 'css/app.css') }}">
+    <script>
+      // store queue list with page numbers to fetch
+      var pagq_list = {{ page_queues }};
+      var prefix = "{{ url_for( 'get_label', topic = topic, page='') }}";
+    </script>
   </head>
-  <body style="background-image:url({{ url_for('static',filename='my_library_logo.svgz') }}); background-size:120%; background-repeat: no-repeat;background-attachment:fixed">
+  <body style="background-image:url({{ url_for('static',filename='my_library_logo.svgz') }}); background-size:120%; background-repeat: no-repeat;background-attachment:fixed;">
   
 	<!--Die Navbar mit Suchfenster -->
 
 	<div class="top-bar" id="example-menu">
 		<div class="top-bar-left">
-			<a href="{{url_for('home')}}">HOME</a>
+			
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li>
+          <a class="dropbtn" href="{{url_for('home')}}">HOME</a>
+          <div class="dropdown-content">
+	          {% for topic in topics %}
+	              <a href="{{ url_for('get_topic', topic = topic ) }}">
+	                {{ topic }}
+	              </a>
+	          {% endfor %}
+          </div>
+        </li>
+      </ul>
+
 		</div>
 		<div class="top-bar-right">
       <form id="search" action="{{ url_for('search') }}">
@@ -27,59 +48,28 @@
 		</div>
 	</div>	 
 
+	<!--Die Navbar mit Suchfenster -->
+
 <!--Grid-Container mit Tabs   -->
 
-		<div class="grid-container">
-      <div class="grid-x grid-padding-x">
-        <div class="large-12 cell">
-          <h1>Welcome to Foundation</h1>
-
+	<div class="page">
+	  <div class="text">
+      <h1>{{ topic }}</h1>
+    </div>
 <!--Tab-Panel-->
 
 					{% include template %}
 
 <!--Ende Tab-Panel-->
 
-        </div>
-      </div>
-    </div>
-
+  </div>
+<button >
 <!-- Ende Grid-Container mit Tabs   -->
 
     <script src="{{ url_for( 'static', filename = 'js/vendor/jquery.js') }}"></script>
-    <script src="{{ url_for( 'static', filename = 'js/vendor/what-input.js') }}"></script>
-    <script src="{{ url_for( 'static', filename = 'js/vendor/foundation.js') }}"></script>
     <script src="{{ url_for( 'static', filename = 'js/vendor/jquery.auto-complete.min.js') }}"></script>
+    <script src="{{ url_for( 'static', filename = 'js/vendor/lazyload.min.js') }}"></script>
+<!--    <script src="{{ url_for( 'static', filename = 'js/vendor/slick.min.js') }}"></script>-->
     <script src="{{ url_for( 'static', filename = 'js/app.js') }}"></script>
-    <script>
-      $('#Volltextsuche').autoComplete({
-        source: function(term, response){
-          $.getJSON("{{ url_for('suggest') }}", { q: term }, function(data){
-          	response(data);
-          });
-        },
-        
-        renderItem: function (item, search){
-            // escape special characters
-            search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-            return '<div class="autocomplete-suggestion" data-val="' + search + '" data-pk="' + item[0] + '">' + item[1].replace(re, "<b>$1</b>") + '</div>';
-        },
-        
-        onSelect: function(e, term, item){
-        	bookId 	= item.data('pk');
-        	url 		= "{{ url_for('get_book',bookId='') }}" + bookId;
-        	window.location.href = url ;
-        }
-      });
-
-      $('#Schlagwortsuche').autoComplete({
-        source: function(term, response){
-          $.getJSON("{{ url_for('schlagworte') }}", { q: term }, function(data){
-          	response(data);
-          });
-        }
-      });
-    </script>
   </body>
 </html>
