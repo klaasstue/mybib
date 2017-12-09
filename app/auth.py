@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
+import json, os
 from functools import wraps
 import Crypto.PublicKey.RSA as RSA
 import Crypto.Hash.MD5 as MD5
@@ -11,12 +11,11 @@ from flask import request
 MSG_VERIFICATION_FAILURE = "Die Signaturprüfung ist fehlgeschlagen. Sind die Nutzerdaten manipuliert?"
 
 
-def load_user_data( filename, keyfile ):
+def load_user_data( keyfile ):
     with open(keyfile) as f:
         pubkey = RSA.importKey( f.read() )
 
-    with open( filename ) as f:
-        out = decode( f.read() )
+    out = decode( os.environ.get('USERDATA') )
 
     user_data, more_bytes = out[:-308], out[-308:]
     signature = (long(more_bytes),)

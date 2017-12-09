@@ -9,8 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 DER_FILE = "bib.der"
-USER_DATA = ".ud.txt"
-_db = auth.load_user_data( USER_DATA, DER_FILE )
+_db = auth.load_user_data( DER_FILE )
 authDB = auth.FlaskRealmDigestDB( 'PrivateLibraryRealm', db = _db )
 
 import model, views
