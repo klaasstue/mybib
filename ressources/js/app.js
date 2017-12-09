@@ -5,7 +5,7 @@ lazyload(images);
 // Für das Modal mit den Buch-Details
 function fillTemplate(jObj){
   // Fill template for book details
-  $('.modal img.large-image').attr('src',jObj.image);
+  $('.modal img.large-image').attr('src',jObj.image)
   $('.modal h2').text( jObj.title);
   $('.modal h4').text( jObj.summary);
   var author_entry = jObj.authors.shift();
@@ -42,13 +42,16 @@ function appendThumbnail( jObj ){
   // Ein Thumbnail hinzufügen
   var card = $('div.card:visible').last();
   var newCard = $( card ).clone();
-  $( newCard ).find( 'img.thumbnail' ).attr('data-src', jObj.image).attr('src', jObj.image);
+  $( newCard ).find( 'img.thumbnail' )
+    .attr('data-src', jObj.image)
+    .attr('src', jObj.image)
+    .attr('onclick','showDetails('+jObj.pk+')');
   $( newCard ).find( 'a' ).attr( 'href', jObj.book );
   var string = $( newCard ).find( 'p' ).html().replace(/\| .*? \|/g, '| '+jObj.size+' |' );
   console.log('Die Buchgroesse ist ' + jObj.size )
   $( newCard ).find('p').html( string );
   $( card ).after( newCard );
-  console.log('Buch hinzugefügt: ' + jObj.image )
+  console.log('Buch hinzugefügt mit bookId ' + jObj.pk+' hinzugefügt: ' + jObj.image )
 };
 
 function getPageNo(label_index){

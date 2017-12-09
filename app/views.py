@@ -105,7 +105,8 @@ def get_label( topic, page ):
     dict(
       book  = url_for('download', filename = e.get('file'), bookId = e.get('pk')),
       image = url_for('download', filename = e.get('path'), imgId = e.get('pk')),
-      size  = format_size( e.get('size') )
+      size  = format_size( e.get('size') ),
+      pk    = e.get('pk')
     ) for e in result
   ]
   response = json.dumps( result )
