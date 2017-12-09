@@ -212,6 +212,7 @@ input {
   width:80%;
   display: block;
   margin: 0 auto;
+  cursor: pointer;
 }
 
 /*Pagination*/
@@ -328,7 +329,10 @@ input {
   margin-right:3rem;
   object-fit: cover;
 }
-
+.authors{
+  color: grey;
+  font-weight:bold
+}
 .is_hidden{
   display:none;
 }

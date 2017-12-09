@@ -8,6 +8,9 @@
     <div class="content">
       <h2></h2>
       <h4></h4>
+      <p class="authors"> 
+        <a href=""></a>
+      </p>
       <div class="infotext">
       </div>
       <p class="caption"><a href="">

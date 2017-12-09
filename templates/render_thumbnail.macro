@@ -1,9 +1,7 @@
 {% macro render_thumbnail( item ) %}	
 		
 		    <div class="card">
-		      <a onclick="showDetails({{ item.get('pk') }})">
-		        <img  class="thumbnail" data-src="{{ url_for('download', filename=item['path'], imgId=item['pk']) }}">
-		      </a>
+	        <img  onclick="showDetails({{ item.get('pk') }})" class="thumbnail" data-src="{{ url_for('download', filename=item['path'], imgId=item['pk']) }}">
 
           <p class="caption"><a href="{{url_for( 'download', filename=item['file'], bookId=item['pk'])}}">
             <img class="icon" src="{{ url_for('static', filename='download.png') }}"></a>

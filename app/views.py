@@ -119,6 +119,7 @@ def get_book( bookId ):
   detail = dict(
       title = item.get( 'title'),
       summary = item.get('summary'),
+      authors = [ (url_for('get_author', author = a), format_author(a)) for a in item.get('authors')],
       content = item.get('content'),
       book  = url_for('download', filename = item.get('file'), bookId = item.get('pk')),
       image = url_for('download', filename = item.get('path'), imgId = item.get('pk')),

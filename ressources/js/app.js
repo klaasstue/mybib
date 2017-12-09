@@ -8,6 +8,14 @@ function fillTemplate(jObj){
   $('.modal img.large-image').attr('src',jObj.image);
   $('.modal h2').text( jObj.title);
   $('.modal h4').text( jObj.summary);
+  var author_entry = jObj.authors.shift();
+  $('.modal p.authors').remove('a').html('<a>');
+  $('.modal p.authors a').attr('href', author_entry[0]).text( author_entry[1] );
+  $.each(jObj.authors, function(i, author_entry){
+    var entry = $('.modal p.authors a:last').clone()
+    $( entry ).attr('href', author_entry[0]).text( ', ' + author_entry[1] );
+    $('.modal p.authors a:last').after( entry );
+  });
   $('.modal div.infotext').html( jObj.content);
   $('.modal p.caption a').attr( 'href', jObj.book );
   var string = $( '.modal p.caption' ).html().replace(/\| .*? \|/g, '| '+jObj.size+' |' );
