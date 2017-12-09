@@ -5,10 +5,13 @@
 }
 
 body {
+  background-image:url('/ressources/my_library_logo.svgz'); 
+  background-size:120%; 
+  background-repeat: no-repeat;
+  background-attachment:fixed;
   box-sizing:border-box;
 	margin: 0;
 	padding: 0;
-	background: #fefefe;
 	font-family: Lato, Helvetica, Roboto, Arial, sans-serif;
 	font-weight: normal;
 	line-height: 1.5;
@@ -173,10 +176,6 @@ input {
 	color: dodgerblue;
 }
 
-.is_hidden{
-  display:none;
-}
-
 /*.tabs-content {*/
 /*    display: block;*/
 /*}*/
@@ -283,19 +282,56 @@ input {
 	align-items: flex-end;
 }
 /*Für das Buch Cover auf der details Seite*/
-
-.detail-img{
-	position: fixed;
-	width: 100%;
-	z-index: -1;
-	padding-right: 30px;
+.overlay{
+  position: fixed;
+  top: 0;
+  bottom:0;
+  left:0;
+  right:0;
+  background: rgba(0, 0, 0, 0.7);
+	z-index: 1;
 }
 
-.detail{
-	margin-top:50%;
-	margin-bottom:50%;
-	background-color: #fff;
-	box-shadow: 0 -5px 20px 0 #000; 
+.modal{
+  padding:3rem;
+  margin: 0 5rem;
+  max-width:70rem;
+  min-width:39rem;
+  width:80%;
+  background-color:#fff;
+  display:flex;
+  border-radius:2px;
+  position:absolute;
+  top: 5rem;
+  z-index:1;
 }
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+/*  transition: all 200ms;*/
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.close:hover {
+  color: #06D85F;
+}
+
+.large-image{
+  position: relative;
+  float:left;
+  min-width:15rem;
+  margin-right:3rem;
+  object-fit: cover;
+}
+
+.is_hidden{
+  display:none;
+}
+
 
 

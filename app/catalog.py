@@ -19,8 +19,6 @@ class Catalog():
     sg = []
     for v in entries:
       sg.append(v.get(u'panel'))
-#      for w in v['Sachgruppen']:
-#        sg.append(w.strip())
     sg = list(set(sg))
     sg.sort()
     self.sachgebiete = sg
@@ -74,7 +72,6 @@ class Catalog():
     return filter(lambda w: term.lower()  in w.lower(), self.schlagworte ) 
     
   def get_sachgebiet( self, name ):
-#    return filter( lambda e:name in e['Sachgruppen'], self.buecher ) 
     return filter( lambda e:name in e['panel'], self.buecher ) 
     
   def get_sachgebiet_sortiert( self, name ):
@@ -95,6 +92,10 @@ class Catalog():
   def get_all_newer( self, y,m,d ):
     tm = datetime(y,m,d).toordinal()
     return filter( lambda entry: entry['ctime'].toordinal() >= tm, self.buecher )
+
+  def get_book_details( self, pk ):
+    book = session.query(Book.atom_elements).filter_by(pk=pk).first()
+    return book
 
   def get_book( self, pk ):
     book = session.query(Book.book_file,Book.mimetype).filter_by(pk=pk).first()

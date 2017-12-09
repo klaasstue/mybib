@@ -1,8 +1,37 @@
+// Für das Lazy Loading
 let images = document.querySelectorAll(".thumbnail");
 lazyload(images);
 
-// Ein Thumbnail hinzufügen
+// Für das Modal mit den Buch-Details
+function fillTemplate(jObj){
+  // Fill template for book details
+  $('.modal img.large-image').attr('src',jObj.image);
+  $('.modal h2').text( jObj.title);
+  $('.modal h4').text( jObj.summary);
+  $('.modal div.infotext').html( jObj.content);
+  $('.modal p.caption a').attr( 'href', jObj.book );
+  var string = $( '.modal p.caption' ).html().replace(/\| .*? \|/g, '| '+jObj.size+' |' );
+  $('.modal p.caption').html( string );
+}
+
+function showDetails( pk ){
+  // fetch details for book with bookId pk and show
+  url = detail_prefix + pk
+  $.getJSON(url, function(jsonObj){
+    fillTemplate( jsonObj );
+    $('.overlay').removeClass('is_hidden');
+    $('.modal').removeClass('is_hidden');
+  });
+}
+
+function hideDetails(){
+    $('.overlay').addClass('is_hidden');
+    $('.modal').addClass('is_hidden');
+}
+
+// Funktionen für das Nachladen 
 function appendThumbnail( jObj ){
+  // Ein Thumbnail hinzufügen
   var card = $('div.card:visible').last();
   var newCard = $( card ).clone();
   $( newCard ).find( 'img.thumbnail' ).attr('data-src', jObj.image).attr('src', jObj.image);
@@ -14,7 +43,6 @@ function appendThumbnail( jObj ){
   console.log('Buch hinzugefügt: ' + jObj.image )
 };
 
-// Hilfsfunktion, um die nächste zu holende Seite festzulegen
 function getPageNo(label_index){
   // get next page number
   var next_page = pagq_list[ label_index ].shift();
@@ -25,11 +53,10 @@ function getPageNo(label_index){
   return next_page;
 };
 
-// Hole die nächsten Einträge
 function loadJSONBooklist( label, label_index ){
   // load next page and add castlist
   var pageNo = getPageNo( label_index );
-  var url = prefix + pageNo + "?q=" + label.replace('&','%26');
+  var url = more_prefix + pageNo + "?q=" + label.replace('&','%26');
   
   $.getJSON(url, function(jsonObjList){
       $.each(jsonObjList, function(i, jsonObj){

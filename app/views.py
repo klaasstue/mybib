@@ -111,6 +111,21 @@ def get_label( topic, page ):
   response = json.dumps( result )
   return response
 
+@app.route('/json/books/<bookId>')
+@authDB.requires_auth
+def get_book( bookId ):
+  "Eine Detailseite"
+  item = cat.get_book_md( int(bookId) )
+  detail = dict(
+      title = item.get( 'title'),
+      summary = item.get('summary'),
+      content = item.get('content'),
+      book  = url_for('download', filename = item.get('file'), bookId = item.get('pk')),
+      image = url_for('download', filename = item.get('path'), imgId = item.get('pk')),
+      size  = format_size( item.get('size') )
+  )
+  return json.dumps( detail )
+
 @app.route('/suggest/')
 @authDB.requires_auth
 def suggest(  ):
@@ -176,18 +191,6 @@ def static_proxy(path):
   # send_static_file will guess the correct MIME type
   app.logger.debug(u"%s %s -> %s" % (time(), request.path, u"Anfrage erhalten!"))
   return app.send_static_file( path )
-
-@app.route('/books/<bookId>')
-@authDB.requires_auth
-def get_book( bookId ):
-  "Eine Detailseite"
-  item = cat.get_book_md( int(bookId) )
-  response = render_template("template.tpl",
-    template   = "detail.tpl",
-    item      = item
-  )
-  return response
-
 
 @app.route('/covers/<path:filename>')
 @app.route('/books/<bookId>/<path:filename>')

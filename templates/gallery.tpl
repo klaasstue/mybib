@@ -1,30 +1,11 @@
-<!-- Slide Content -->
+{% from 'render_gallery.macro' import render_gallery %}
 
-<div class="wrapper">
+{{ render_gallery( entries ) }}
 
-	  {% for item in entries %}
-			
-		    <div class="card">
-		      <img class="thumbnail" src="{{ url_for('download', filename=item['path'], imgId=item['pk']) }}">
+{% if pagination %}
 
-          <p class="caption"><a href="{{url_for( 'download', filename=item['file'], bookId=item['pk'])}}">
-            <img class="icon" src="{{ url_for('static', filename='download.png') }}"></a>
-             | {{ format_size(item['size']) }} | 
-            <img class="icon" src="{{ url_for('static', filename='EPUB_logo.svg') }}"> 
-          </p>
+  {% from 'render_pagination.macro' import render_pagination %}
 
-		    </div>
+  {{ render_pagination( pagination ) }}
 
-		{% endfor %}
-
-</div>
-
-<!-- End Slide Content -->
-
-      {% if pagination %}
-
-        {% from 'render_pagination.macro' import render_pagination %}
-        {{ render_pagination(pagination) }}
-        
-      {% endif %}
-
+{% endif %}
